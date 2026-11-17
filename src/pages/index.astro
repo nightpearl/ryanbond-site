@@ -21,12 +21,6 @@ const principles = [
   { icon: 'route', title: 'Connect strategy to execution', body: 'Turn business goals into clear priorities, roadmaps and releases.' },
   { icon: 'people', title: 'Bring people with me', body: 'Align leaders, designers and engineers around outcomes, not just output.' },
 ];
-const numbers = [
-  { stat: '2×', label: 'Britannica Kids subscription revenue in year one' },
-  { stat: '$165M+', label: 'retention product portfolio at Epsilon-Conversant' },
-  { stat: '150+', label: 'games and digital experiences produced' },
-  { stat: '25', label: 'years leading product, programs and production' },
-];
 const brands = ['Encyclopaedia Britannica', 'SteelSeries', 'UnitedHealthcare', 'Scouting America', 'Kraft', 'Kellogg’s', 'Microsoft', 'Dell', 'AT&T', 'State Farm', 'MillerCoors', 'McDonald’s'];
 const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/2024/11/ryan-bond-small-headshot-2024.jpg?w=600';
 ---
@@ -55,7 +49,7 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
     <ul>{brands.map((b) => <li>{b}</li>)}</ul>
   </section>
 
-  <section class="band loop-band">
+  <section class="band loop-band on-stage">
     <div class="loop-intro">
       <h2>The loop got faster. The job didn’t change.</h2>
       <p class="lede">
@@ -72,9 +66,9 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
     <div class="cols">
       {principles.map((p) => (
         <div class="principle">
-          <svg viewBox="0 0 32 32" width="36" height="36" aria-hidden="true" fill="none" stroke="var(--pine)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            {p.icon === 'user' && <><circle cx="16" cy="11" r="5" /><path d="M6 27c1.5-5.5 5.5-8 10-8s8.5 2.5 10 8" /><circle cx="25" cy="7" r="2" fill="var(--blaze)" stroke="none" /></>}
-            {p.icon === 'route' && <><circle cx="7" cy="25" r="3" /><path d="M10 25h6a5 5 0 0 0 0-10h-2a5 5 0 0 1 0-10h8" stroke-dasharray="3 3" /><path d="M24 2l4 3-4 3" /><circle cx="26" cy="5" r="0.5" fill="var(--blaze)" /></>}
+          <svg viewBox="0 0 32 32" width="36" height="36" aria-hidden="true" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round">
+            {p.icon === 'user' && <><circle cx="16" cy="11" r="5" /><path d="M6 27c1.5-5.5 5.5-8 10-8s8.5 2.5 10 8" /><circle cx="25" cy="7" r="2" fill="var(--teal)" stroke="none" /></>}
+            {p.icon === 'route' && <><circle cx="7" cy="25" r="3" /><path d="M10 25h6a5 5 0 0 0 0-10h-2a5 5 0 0 1 0-10h8" stroke-dasharray="3 3" /><path d="M24 2l4 3-4 3" /><circle cx="26" cy="5" r="0.5" fill="var(--teal)" /></>}
             {p.icon === 'people' && <><circle cx="11" cy="11" r="4" /><circle cx="22" cy="12" r="3.5" /><path d="M3 26c1-4.5 4-7 8-7s7 2.5 8 7" /><path d="M18 20.5c1.2-.9 2.6-1.4 4-1.4 3.4 0 6 2.2 7 6.4" /></>}
           </svg>
           <h3>{p.title}</h3>
@@ -84,11 +78,6 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
     </div>
   </section>
 
-  <section class="numbers" aria-label="Selected results">
-    {numbers.map((n) => (
-      <div><strong>{n.stat}</strong><span>{n.label}</span></div>
-    ))}
-  </section>
 
   <section class="stories" aria-labelledby="stories-h">
     <div class="section-head">
@@ -97,7 +86,7 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
     </div>
     {stories.map((s, i) => (
       <StoryRow slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
-        summary={s.data.summary} cover={s.data.cover} highlight={s.data.highlights[0]} seed={i * 7 + 3} />
+        summary={s.data.summary} cover={s.data.cover} seed={i * 7 + 3} />
     ))}
   </section>
 
@@ -115,14 +104,14 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
     </div>
   </section>
 
-  <section class="closing">
+  <section class="closing on-stage">
     <div class="closing-map"><TopoMap seed={29} width={900} height={320} rings={7} peaks={[{ x: 0.85, y: 0.5, r: 0.5 }, { x: 0.1, y: 0.2, r: 0.3 }]} /></div>
     <div class="closing-text">
       <h2>Got a product question worth getting right?</h2>
       <p class="lede">A role, a project, or a conversation about where product work is heading. I’d like to hear it.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="mailto:ryanbond@fastmail.net">Email ryanbond@fastmail.net</a>
-        <a class="btn" href="https://www.linkedin.com/in/ryanmbond/">Connect on LinkedIn</a>
+        <a class="btn btn-light" href="mailto:ryanbond@fastmail.net">Email ryanbond@fastmail.net</a>
+        <a class="btn btn-outline-light" href="https://www.linkedin.com/in/ryanmbond/">Connect on LinkedIn</a>
       </div>
     </div>
   </section>
@@ -135,7 +124,7 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
   .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center; padding: 3.5rem 0 3rem; }
   .hero h1 { max-width: 12ch; }
   .hero .lede { margin-bottom: 2rem; }
-  .hero-map { aspect-ratio: 5 / 4; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+  .hero-map { aspect-ratio: 5 / 4; border-radius: var(--radius); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
   @media (max-width: 56rem) { .hero { grid-template-columns: 1fr; } .hero h1 { max-width: 16ch; } }
 
   .brands { padding: 1.75rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -143,7 +132,7 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
   .brands ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.75rem; }
   .brands li { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; color: var(--text); opacity: 0.75; }
 
-  .band { background: var(--surface); margin: 4rem -1.25rem 0; padding: 4rem 1.25rem; border-radius: 8px; }
+  .band { margin: 4rem -1.25rem 0; padding: 4rem 1.25rem; border-radius: var(--radius); }
   .loop-band { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
   @media (min-width: 64rem) { .loop-band { grid-template-columns: 0.9fr 1.1fr; align-items: center; padding: 4rem 3rem; } }
   .loop-intro h2 { max-width: 20ch; }
@@ -153,27 +142,19 @@ const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/202
   .principle p { color: var(--muted); font-family: var(--reading); font-size: 1.1rem; margin: 0; }
   @media (max-width: 44rem) { .cols { grid-template-columns: 1fr; gap: 1.75rem; } }
 
-  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); padding: 0; border-top: 2px solid var(--text); }
-  .numbers div { padding: 1.25rem 1.25rem 1.25rem 0; display: flex; flex-direction: column; gap: 0.25rem; }
-  .numbers div + div { border-left: 1px solid var(--line); padding-left: 1.25rem; }
-  .numbers strong { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
-  .numbers span { color: var(--muted); font-size: 0.95rem; }
-  @media (max-width: 44rem) {
-    .numbers { grid-template-columns: 1fr 1fr; }
-    .numbers div:nth-child(3) { border-left: 0; padding-left: 0; }
-    .numbers div:nth-child(n+3) { border-top: 1px solid var(--line); }
-  }
 
   .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .section-head a { font-weight: 600; }
 
   .behind { display: grid; grid-template-columns: 14rem 1fr; gap: 2.5rem; align-items: center; border-top: 1px solid var(--line); }
-  .behind img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; background: var(--surface); }
+  .behind img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius); background: var(--surface); }
   .behind .lede { margin-bottom: 1.5rem; }
   @media (max-width: 44rem) { .behind { grid-template-columns: 1fr; } .behind img { max-width: 13rem; } }
 
-  .closing { position: relative; border-radius: 8px; overflow: hidden; background: var(--surface); padding: 0; margin-top: 1rem; }
+  .closing { position: relative; border-radius: var(--radius); overflow: hidden; padding: 0; margin-top: 1rem; }
   .closing-map { position: absolute; inset: 0; opacity: 0.9; }
   .closing-text { position: relative; padding: 3.5rem 2rem; max-width: 40rem; }
   .closing-text .lede { margin-bottom: 1.5rem; }
+  .btn-outline-light { border-color: var(--stage-ink); color: var(--stage-ink); }
+  .btn-outline-light:hover { background: rgba(246, 243, 250, 0.08); }
 </style>

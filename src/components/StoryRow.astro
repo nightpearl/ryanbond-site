@@ -26,7 +26,7 @@ const { slug, title, kicker, years, summary, cover, highlight, seed = 3 } = Astr
 
 <style>
   .row { display: grid; grid-template-columns: 18rem 1fr; gap: 2rem; padding: 2rem 0; border-top: 1px solid var(--line); align-items: start; }
-  .media { display: block; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+  .media { display: block; aspect-ratio: 16 / 10; border-radius: var(--radius); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
   .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--muted); }
   .meta span:first-child { color: var(--accent); font-weight: 600; }
