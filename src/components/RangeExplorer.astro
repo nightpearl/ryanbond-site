@@ -1,0 +1,94 @@
+---
+/**
+ * "One person, the whole crew": the hats Ryan wears, shown as a credits grid.
+ * Rows are featured stories, columns are hats; a filled cell means he wore that hat there.
+ * Pick a hat to light up its column and read where it shows up. Works without JS (all shown).
+ */
+import { hats, storyHats } from '../data/range';
+interface Props { stories: { id: string; title: string; years: string }[] }
+const { stories } = Astro.props;
+---
+<div class="range" data-range>
+  <div class="picker" role="group" aria-label="Pick a hat">
+    <button type="button" class="chip" aria-pressed="true" data-hat="all">All of it</button>
+    {hats.map((h) => <button type="button" class="chip" aria-pressed="false" data-hat={h.id}>{h.label}</button>)}
+  </div>
+
+  <p class="evidence" aria-live="polite" data-evidence>
+    Most people pick a lane. My work has always crossed them, which is why lean teams bring me in.
+  </p>
+  {hats.map((h) => <template data-line={h.id}>{h.line}</template>)}
+
+  <div class="grid" role="table" aria-label="Hats worn in each featured story">
+    <div class="row head" role="row">
+      <span class="story" role="columnheader">Story</span>
+      {hats.map((h) => <span class="cell" role="columnheader" data-col={h.id}><span class="col-label">{h.label}</span></span>)}
+    </div>
+    {stories.map((s) => (
+      <a class="row" role="row" href={`/work/${s.id}/`} data-row={(storyHats[s.id] ?? []).join(' ')}>
+        <span class="story" role="rowheader"><strong>{s.title}</strong><small>{s.years}</small></span>
+        {hats.map((h) => {
+          const on = (storyHats[s.id] ?? []).includes(h.id);
+          return (
+            <span class="cell" role="cell" data-col={h.id}>
+              <i class:list={['dot', { on }]} aria-label={on ? h.label : `No ${h.label.toLowerCase()}`}></i>
+            </span>
+          );
+        })}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-range]').forEach((root) => {
+    const intro = root.querySelector('[data-evidence]')!.textContent;
+    const chips = root.querySelectorAll<HTMLButtonElement>('.chip');
+    chips.forEach((chip) => chip.addEventListener('click', () => {
+      const hat = chip.dataset.hat!;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      root.dataset.active = hat === 'all' ? '' : hat;
+      const tpl = root.querySelector<HTMLTemplateElement>(`template[data-line="${hat}"]`);
+      root.querySelector('[data-evidence]')!.textContent = tpl ? tpl.content.textContent : intro;
+      root.querySelectorAll<HTMLElement>('[data-col]').forEach((el) => el.classList.toggle('lit', el.dataset.col === hat));
+      root.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+        row.classList.toggle('dim', hat !== 'all' && !row.dataset.row!.split(' ').includes(hat));
+      });
+    }));
+  });
+</script>
+
+<style>
+  .picker { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .chip {
+    font: 600 0.95rem/1 var(--sans); padding: 0.6rem 1rem; border-radius: 999px; cursor: pointer;
+    border: 1.5px solid var(--line); background: var(--surface); color: var(--text);
+  }
+  .chip:hover { border-color: var(--text); }
+  .chip[aria-pressed='true'] { background: var(--stage); color: var(--stage-ink); border-color: var(--stage); }
+  .evidence { font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.5; min-height: 3.9em; max-width: 46rem; margin: 0 0 1.5rem; }
+
+  .grid { border-top: 2px solid var(--text); }
+  .row { display: grid; grid-template-columns: minmax(10rem, 1.6fr) repeat(5, 1fr); align-items: center; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); transition: opacity 0.2s; }
+  a.row:hover { background: var(--surface); }
+  .row.dim { opacity: 0.35; }
+  .head { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+  .story { padding: 0.9rem 0.5rem 0.9rem 0; display: flex; flex-direction: column; }
+  .story small { color: var(--muted); font-size: 0.85rem; }
+  .cell { display: flex; justify-content: center; align-items: center; padding: 0.9rem 0.25rem; height: 100%; text-align: center; }
+  .cell.lit { background: color-mix(in srgb, var(--teal) 14%, transparent); }
+  .head .cell.lit { color: var(--text); }
+  .dot { width: 0.85rem; height: 0.85rem; border-radius: 999px; border: 1.5px solid var(--line); }
+  .dot.on { background: var(--stage); border-color: var(--stage); }
+  .lit .dot.on { background: var(--signal-text); border-color: var(--signal-text); transform: scale(1.25); transition: transform 0.2s; }
+
+  @media (max-width: 44rem) {
+    .row { grid-template-columns: minmax(7.5rem, 1.4fr) repeat(5, 1fr); }
+    .story strong { font-size: 0.92rem; line-height: 1.25; }
+    .head .cell { padding: 0.5rem 0; }
+    .col-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 0.78rem; white-space: nowrap; }
+  }
+  @media (prefers-color-scheme: dark) {
+    .dot.on { background: var(--stage-muted); border-color: var(--stage-muted); }
+  }
+</style>

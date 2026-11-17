@@ -23,11 +23,13 @@ Every push to `main` publishes the live site at https://ryanbond.co. Every other
 - Project images currently load from the old WordPress media host (skillpointstation.wordpress.com). Before the WordPress site is retired, download them into `public/images/` and update the paths.
 
 ## Visual system (keep consistent)
-- Motif: a trail map. `TopoMap.astro` draws contour lines (and an optional blazed route with waypoints) as build-time SVG. The hero map is the one bold element; keep everything else quiet.
-- Colors (tokens in `Base.astro`): ink, paper, mist, pine (primary), blaze (trail-marker yellow, only for markers and small highlights), slate.
-- Type: Schibsted Grotesk for headings and UI; Source Serif 4 for ledes and long-form reading (`.lede`, `.prose`, `.reading`).
-- Other graphics: `LoopDiagram.astro` (insight → prototype → validate → ship), `CareerTimeline.astro` (career to scale; update dates there), `StoryRow.astro` (story list rows; stories without a cover get a topo map).
-- Avoid: all-caps labels, "·" separators, "→" appended to links, identical card grids.
+- Brand: Ryan's own "Ryan" design system (claude.ai Design System artifact). Paper and ink, deep-purple `stage` for feature sections (`.on-stage` class re-points the color tokens), ONE hot-fuchsia `signal` moment per page (the hero's primary button), teal for markers and highlights.
+- Type: Archivo 800 for headings, Instrument Sans for everything you read, Instrument Serif italic for pull quotes (`.pull`). Kickers are the only all-caps text.
+- Logo: purple rounded square with a fuchsia dot (flips light in dark mode). 10px radius, hairlines, no shadows, 1.5px line icons in ink.
+- Motif: a trail map. `TopoMap.astro` draws contours and a route as build-time SVG; the hero version animates once (respects reduced motion).
+- Home sections: stage hero, brands, Range (`RangeExplorer.astro` + `src/data/range.ts`: hats x stories), How I'm wired (`WiredFor.astro`: Working Genius + Kolbe), loop (`LoopDiagram.astro`), principles, stories (`StoryRow.astro`), who's behind it, stage closing.
+- About: `CareerTimeline.astro` draws the career to scale; update dates there.
+- Keep results (numbers) off the home page; they live on story pages.
 - Featured stories live in `src/content/stories/`; archive projects in `src/content/work/`.
 
 ## Voice and content

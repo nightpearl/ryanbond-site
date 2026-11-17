@@ -14,11 +14,12 @@ interface Props {
   rings?: number;
   title?: string;
   class?: string;
+  animate?: boolean;
 }
 const {
   seed = 7, width = 600, height = 480, waypoints = [], rings = 9,
   peaks = [{ x: 0.72, y: 0.3, r: 0.42 }, { x: 0.22, y: 0.78, r: 0.3 }],
-  title, class: cls,
+  title, class: cls, animate = false,
 } = Astro.props;
 
 // Deterministic pseudo-random
@@ -66,12 +67,12 @@ if (wp.length > 1) {
   }
 }
 ---
-<svg class:list={['topo', cls]} viewBox={`0 0 ${width} ${height}`} role={title ? 'img' : 'presentation'} aria-label={title} aria-hidden={title ? undefined : 'true'} preserveAspectRatio="xMidYMid slice">
+<svg class:list={['topo', cls, { animate }]} viewBox={`0 0 ${width} ${height}`} role={title ? 'img' : 'presentation'} aria-label={title} aria-hidden={title ? undefined : 'true'} preserveAspectRatio="xMidYMid slice">
   <g fill="none" stroke="var(--contour)">
     {lines.map((l) => <path d={l.d} stroke-width={l.index ? 1.6 : 1} />)}
   </g>
   {route && (
-    <g>
+    <g class="route">
       <path d={route} fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round" />
       <path d={route} fill="none" stroke="var(--pine)" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" />
     </g>
@@ -82,7 +83,7 @@ if (wp.length > 1) {
     const lx = right ? w.px + 18 : w.px - 22;
     const ly = i === 0 || last ? w.py + 28 : w.py - 2;
     return (
-      <g>
+      <g class="wp" style={`--d:${0.35 + i * 0.32}s`}>
         {last
           ? <g transform={`translate(${w.px},${w.py})`}><rect x="-8" y="-8" width="16" height="16" rx="2" fill="var(--blaze)" transform="rotate(45)" /><circle r="3" fill="var(--ink)" /></g>
           : <g><circle cx={w.px} cy={w.py} r="9" fill="var(--paper)" stroke="var(--pine)" stroke-width="2.5" /><circle cx={w.px} cy={w.py} r="3.5" fill="var(--blaze)" /></g>}
@@ -102,4 +103,11 @@ if (wp.length > 1) {
   .wp-label { font-family: var(--display); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
   .wp-year { font-size: 20px; font-weight: 700; fill: var(--ink); }
   .wp-sub { font-size: 17px; fill: var(--slate); }
+
+  /* One orchestrated moment: the route draws itself, then waypoints appear in order */
+  .animate .route { animation: draw 1.9s cubic-bezier(.6,.05,.3,1) 0.2s both; }
+  .animate .wp { animation: pop 0.5s ease-out var(--d) both; }
+  @keyframes draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .animate .route, .animate .wp { animation: none; } }
 </style>
