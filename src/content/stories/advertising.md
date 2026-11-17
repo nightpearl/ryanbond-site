@@ -1,6 +1,6 @@
 ---
 title: "Advertising & digital programs"
-kicker: "Razorfish · Fortune 500 brands"
+kicker: "Razorfish, Fortune 500 brands"
 years: "2005–2014"
 roles: ["Program Manager", "Senior Project Manager", "Project Manager"]
 summary: "Leading integrated campaigns and digital programs for some of the world's biggest brands, across teams of up to 60+ people."

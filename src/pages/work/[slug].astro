@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import TopoMap from '../../components/TopoMap.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -7,16 +8,16 @@ export async function getStaticPaths() {
   const projects = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
   const storyPaths = stories.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { kind: 'story', entry, next: stories[(i + 1) % stories.length], projects },
+    props: { kind: 'story', entry, index: i, next: stories[(i + 1) % stories.length], projects },
   }));
   const projectPaths = projects.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { kind: 'project', entry, next: projects[(i + 1) % projects.length], projects },
+    props: { kind: 'project', entry, index: i, next: projects[(i + 1) % projects.length], projects },
   }));
   return [...storyPaths, ...projectPaths];
 }
 
-const { kind, entry, next, projects } = Astro.props as any;
+const { kind, entry, index, next, projects } = Astro.props as any;
 const { Content } = await render(entry);
 const d = entry.data;
 const facts = kind === 'project'
@@ -28,21 +29,23 @@ const related = kind === 'story'
 ---
 <Base title={`${d.title} | Ryan Bond`} description={d.summary}>
   <article>
-    <a class="back" href="/work/">← All work</a>
-    <header>
-      <p class="eyebrow">{kind === 'story' ? `${d.kicker} · ${d.years}` : d.years}</p>
+    <a class="back" href="/work/">All work</a>
+    <header class="head">
+      <p class="kicker">{kind === 'story' ? <>{d.kicker}<span class="yrs">{d.years}</span></> : d.years}</p>
       <h1>{d.title}</h1>
       {kind === 'story' && <p class="lede">{d.summary}</p>}
     </header>
 
-    {d.cover && <img class="cover" src={d.cover} alt="" />}
+    <div class="cover">
+      {d.cover ? <img src={d.cover} alt="" /> : <TopoMap seed={index * 7 + 3} width={900} height={420} rings={9} />}
+    </div>
 
     {kind === 'story' && (
       <div class="story-meta">
         <ul class="highlights">
           {d.highlights.map((h: string) => <li>{h}</li>)}
         </ul>
-        <p class="roles"><span>Roles</span> {d.roles.join(' · ')}</p>
+        <p class="roles"><strong>Roles:</strong> {d.roles.join(', ')}</p>
       </div>
     )}
 
@@ -66,38 +69,45 @@ const related = kind === 'story'
       </section>
     )}
 
-    <nav class="next">
+    <nav class="next" aria-label="Next">
       <span>{kind === 'story' ? 'Next story' : 'Next project'}</span>
-      <a href={`/work/${next.id}/`}>{next.data.title} →</a>
+      <a href={`/work/${next.id}/`}>{next.data.title}</a>
     </nav>
   </article>
 </Base>
 
 <style>
-  article { max-width: 46rem; margin: 0 auto; padding: 2rem 0; }
-  .back { display: inline-block; margin-bottom: 1.5rem; text-decoration: none; font-weight: 600; }
-  .eyebrow { color: var(--accent); font-weight: 600; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem; }
-  h1 { font-size: clamp(2rem, 6vw, 3rem); }
-  .lede { color: var(--muted); font-size: 1.2rem; margin: 0 0 1rem; }
-  .cover { width: 100%; border-radius: 1rem; border: 1px solid var(--line); margin: 1rem 0 1.5rem; display: block; }
-  .story-meta { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; margin: 1rem 0 2rem; }
-  .highlights { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.6rem; }
-  .highlights li { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; padding-left: 1rem; border-left: 3px solid var(--accent); }
-  .roles { margin: 0; color: var(--muted); font-size: 0.95rem; }
-  .roles span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-right: 0.4rem; }
+  article { padding: 2rem 0; }
+  .back { display: inline-block; margin-bottom: 1.5rem; font-weight: 600; }
+  .head { max-width: 50rem; }
+  .yrs { color: var(--muted); font-weight: 500; margin-left: 0.75rem; padding-left: 0.75rem; border-left: 1px solid var(--line); }
+  .cover { aspect-ratio: 21 / 9; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); margin: 1.5rem 0 2rem; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .story-meta { margin: 0 0 2.5rem; border-top: 2px solid var(--text); }
+  .highlights { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .highlights li { padding: 1.1rem 1.25rem 1.1rem 0; font-size: 1.1rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+  .highlights li + li { padding-left: 1.25rem; border-left: 1px solid var(--line); }
+  .roles { margin: 0; padding-top: 0.9rem; border-top: 1px solid var(--line); color: var(--muted); }
+  .roles strong { color: var(--text); }
   .facts {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem 1.5rem;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; margin: 0 0 2rem;
+    border-top: 2px solid var(--text); padding: 1.1rem 0; margin: 0 0 2rem;
   }
-  .facts dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
-  .facts dd { margin: 0.2rem 0 0; }
+  .facts dt { font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+  .facts dd { margin: 0.15rem 0 0; }
   .coming { color: var(--muted); font-style: italic; }
-  .related { border-top: 1px solid var(--line); margin-top: 2.5rem; padding-top: 1.5rem; }
+  .related { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 1.5rem; max-width: var(--measure); }
   .related h2 { font-size: 1.3rem; }
   .related ul { list-style: none; padding: 0; margin: 0; }
-  .related a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); }
+  .related a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); }
+  .related a:hover strong { color: var(--accent); }
   .related a span { color: var(--muted); font-size: 0.9rem; white-space: nowrap; }
-  .next { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
-  .next span { color: var(--muted); font-size: 0.85rem; }
-  .next a { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; text-decoration: none; }
+  .next { border-top: 2px solid var(--text); margin-top: 3.5rem; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .next span { color: var(--muted); font-size: 0.95rem; }
+  .next a { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration-color: var(--blaze); text-decoration-thickness: 3px; }
+  @media (max-width: 44rem) {
+    .highlights { grid-template-columns: 1fr; }
+    .highlights li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+    .cover { aspect-ratio: 16 / 10; }
+  }
 </style>

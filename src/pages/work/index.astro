@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import StoryCard from '../../components/StoryCard.astro';
+import StoryRow from '../../components/StoryRow.astro';
 import { getCollection } from 'astro:content';
 
 const stories = (await getCollection('stories')).sort((a, b) => a.data.order - b.data.order);
@@ -11,24 +11,22 @@ const archive = (await getCollection('work')).sort((a, b) => {
 ---
 <Base title="Work | Ryan Bond" description="Featured stories and a 25-year archive of product, game and campaign work by Ryan Bond.">
   <header class="page-head">
-    <p class="eyebrow">Work</p>
+    <p class="kicker">Work</p>
     <h1>Twenty-five years of building things people use</h1>
-    <p class="lede">The stories behind the work, then the full archive.</p>
+    <p class="lede">Six stories that show how I work, followed by the full archive of individual projects.</p>
   </header>
 
-  <section>
-    <h2 class="section-title">Featured stories</h2>
-    <div class="grid">
-      {stories.map((s) => (
-        <StoryCard slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
-          summary={s.data.summary} cover={s.data.cover} />
-      ))}
-    </div>
+  <section aria-labelledby="stories-h">
+    <h2 id="stories-h" class="visually-hidden">Featured stories</h2>
+    {stories.map((s, i) => (
+      <StoryRow slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
+        summary={s.data.summary} cover={s.data.cover} highlight={s.data.highlights[0]} seed={i * 7 + 3} />
+    ))}
   </section>
 
-  <section class="archive">
-    <h2 class="section-title">The archive</h2>
-    <p class="blurb">Individual projects, newest first.</p>
+  <section class="archive" aria-labelledby="archive-h">
+    <h2 id="archive-h">The archive</h2>
+    <p class="sub">Individual projects, newest first.</p>
     <ul>
       {archive.map((p) => (
         <li>
@@ -44,22 +42,19 @@ const archive = (await getCollection('work')).sort((a, b) => {
 </Base>
 
 <style>
-  .page-head { padding: 3rem 0 1.5rem; max-width: 44rem; }
-  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
-  h1 { font-size: clamp(2rem, 5vw, 3rem); }
-  .lede { color: var(--muted); font-size: 1.15rem; }
-  .section-title { font-size: 1.6rem; margin: 1rem 0 1.25rem; }
-  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
-  .archive { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 2rem; }
-  .blurb { color: var(--muted); margin: -0.75rem 0 1rem; }
+  .page-head { padding: 3.5rem 0 1.5rem; }
+  .page-head h1 { max-width: 18ch; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .archive { border-top: 2px solid var(--text); margin-top: 3rem; padding-top: 2rem; }
+  .sub { color: var(--muted); }
   .archive ul { list-style: none; margin: 0; padding: 0; }
   .archive a {
-    display: grid; grid-template-columns: 7rem 1fr; gap: 0.15rem 1rem; padding: 0.9rem 0;
-    border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text);
+    display: grid; grid-template-columns: 7rem 1fr 1fr; gap: 0.15rem 1.5rem; padding: 0.9rem 0.5rem;
+    border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); align-items: baseline;
   }
-  .archive a:hover .t { color: var(--accent); }
-  .yrs { color: var(--accent); font-weight: 600; font-size: 0.9rem; grid-row: span 2; padding-top: 0.1rem; }
+  .archive a:hover { background: var(--surface); }
+  .yrs { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
   .t { font-weight: 600; }
-  .r { color: var(--muted); font-size: 0.9rem; }
-  @media (max-width: 30rem) { .archive a { grid-template-columns: 1fr; } .yrs { grid-row: auto; } }
+  .r { color: var(--muted); font-size: 0.95rem; }
+  @media (max-width: 44rem) { .archive a { grid-template-columns: 1fr; } }
 </style>

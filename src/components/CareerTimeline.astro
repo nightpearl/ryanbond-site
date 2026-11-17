@@ -1,0 +1,67 @@
+---
+/**
+ * Career drawn to scale, 1999–2027. Each row's bar is proportional to real dates,
+ * so the shape of the career reads at a glance.
+ */
+const START = 1999, END = 2027;
+const eras = [
+  { org: 'Fractional product', role: 'Product leader & producer', from: 2024.8, to: 2027, now: true },
+  { org: 'Six Feet Up', role: 'Service Delivery Lead', from: 2026, to: 2026.8 },
+  { org: 'SteelSeries', role: 'Lead Product Manager, Software', from: 2021.8, to: 2024.8 },
+  { org: 'Rally Health / UnitedHealthcare', role: 'Senior Product Manager', from: 2021.1, to: 2021.8 },
+  { org: 'Epsilon-Conversant', role: 'Senior Product Manager', from: 2019.9, to: 2021.1 },
+  { org: 'Encyclopaedia Britannica', role: 'Product Director', from: 2014.7, to: 2019.7 },
+  { org: 'Razorfish', role: 'Producer, then Program Manager', from: 1999, to: 2014.7 },
+];
+const pct = (y: number) => ((y - START) / (END - START)) * 100;
+const ticks = [1999, 2009, 2019];
+const fmt = (e: typeof eras[number]) => {
+  const a = Math.floor(e.from), b = Math.floor(e.to);
+  if (e.now) return `${a}–now`;
+  return a === b ? `${a}` : `${a}–${b}`;
+};
+---
+<figure class="career">
+  <div class="axis" aria-hidden="true">
+    <span></span><span></span>
+    <span class="scale">
+      {ticks.map((t) => <i style={`left:${pct(t)}%`}>{t}</i>)}
+      <i class="end" style="left:100%">Now</i>
+    </span>
+  </div>
+  <ol>
+    {eras.map((e) => (
+      <li>
+        <span class="yrs">{fmt(e)}</span>
+        <span class="who"><strong>{e.org}</strong><span>{e.role}</span></span>
+        <span class="bar" aria-hidden="true">
+          {ticks.map((t) => <b style={`left:${pct(t)}%`}></b>)}
+          <i class:list={[{ now: e.now }]} style={`left:${pct(e.from)}%;width:${Math.max(pct(e.to) - pct(e.from), 1.5)}%`}></i>
+        </span>
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<style>
+  .career { margin: 1.5rem 0 0; }
+  .axis, li { display: grid; grid-template-columns: 7.5rem minmax(12rem, 1fr) minmax(14rem, 1.3fr); gap: 1.25rem; align-items: center; }
+  .axis { padding-bottom: 0.5rem; border-bottom: 2px solid var(--text); }
+  .scale { position: relative; height: 1.2rem; }
+  .scale i { position: absolute; transform: translateX(0); font-style: normal; font-size: 0.8rem; color: var(--muted); }
+  .scale i.end { transform: translateX(-100%); }
+  ol { list-style: none; padding: 0; margin: 0; }
+  li { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
+  .yrs { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+  .who { display: flex; flex-direction: column; }
+  .who span { color: var(--muted); font-size: 0.95rem; }
+  .bar { position: relative; height: 0.9rem; background: var(--surface); border-radius: 2px; }
+  .bar b { position: absolute; top: -0.25rem; bottom: -0.25rem; border-left: 1px dashed var(--line); }
+  .bar i { position: absolute; top: 0; bottom: 0; background: var(--pine); border-radius: 2px; }
+  .bar i.now { background: linear-gradient(90deg, var(--pine), var(--blaze)); }
+  @media (max-width: 44rem) {
+    .axis { display: none; }
+    li { grid-template-columns: 1fr; gap: 0.35rem; }
+    .bar { height: 0.5rem; }
+  }
+</style>

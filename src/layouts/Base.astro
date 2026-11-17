@@ -8,6 +8,12 @@ const {
   description = 'Ryan Bond: product leader and producer turning customer insight into products, fast. 25 years across ed-tech, health, gaming, advertising and nonprofits.',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/work/', label: 'Work' },
+  { href: '/about/', label: 'About' },
+  { href: '/services/', label: 'Work with me' },
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -24,100 +30,152 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
-      <a class="brand" href="/">Ryan Bond</a>
-      <nav>
-        <a href="/work/">Work</a>
-        <a href="/about/">About</a>
-        <a href="/services/">Work with me</a>
-      </nav>
-      <a class="cta" href="mailto:ryanbond@fastmail.net">Contact</a>
+      <div class="wrap header-inner">
+        <a class="brand" href="/">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 20 L9 8 L13 14 L16 10 L21 20 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="5" r="2" fill="var(--blaze)"/></svg>
+          Ryan Bond
+        </a>
+        <nav aria-label="Main">
+          {nav.map((n) => (
+            <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+          ))}
+        </nav>
+        <a class="btn btn-primary btn-sm" href="mailto:ryanbond@fastmail.net">Get in touch</a>
+      </div>
     </header>
-    <main>
+    <main id="main">
       <slot />
     </main>
     <footer class="site-footer">
-      <p>© {new Date().getFullYear()} Ryan Bond · Evanston, IL</p>
-      <p>
-        <a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a> ·
-        <a href="mailto:ryanbond@fastmail.net">ryanbond@fastmail.net</a>
-      </p>
+      <div class="wrap footer-inner">
+        <p class="brand-foot">Ryan Bond<br /><span>Product leadership, Evanston, Illinois</span></p>
+        <ul>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/services/">Work with me</a></li>
+          <li><a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a></li>
+          <li><a href="mailto:ryanbond@fastmail.net">ryanbond@fastmail.net</a></li>
+        </ul>
+        <p class="copy">© {new Date().getFullYear()} Ryan Bond</p>
+      </div>
     </footer>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --bg: #faf8f4;
-    --surface: #ffffff;
-    --text: #1c1b19;
-    --muted: #5d5a54;
-    --accent: #1f5f8b;
-    --line: #e4e0d8;
-    --serif: 'Fraunces', Georgia, serif;
-    --sans: 'Inter', system-ui, -apple-system, sans-serif;
-    --max: 68rem;
+    --ink: #16213b;
+    --paper: #ffffff;
+    --mist: #f3f5f4;
+    --pine: #1f5641;
+    --blaze: #e3a92b;
+    --slate: #596274;
+    --rule: #dde3e0;
+    --contour: #d6dfda;
+
+    --bg: var(--paper);
+    --surface: var(--mist);
+    --text: var(--ink);
+    --muted: var(--slate);
+    --accent: var(--pine);
+    --line: var(--rule);
+
+    --display: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    --reading: 'Source Serif 4', Georgia, serif;
+    --max: 72rem;
+    --measure: 40rem;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #141413;
-      --surface: #1d1c1a;
-      --text: #f1eee8;
-      --muted: #a8a49c;
-      --accent: #7fb6dc;
-      --line: #2e2c29;
+      --ink: #e8eeeb;
+      --paper: #0f1714;
+      --mist: #16211d;
+      --pine: #7cc3a2;
+      --slate: #9aa8a1;
+      --rule: #26332e;
+      --contour: #22312b;
     }
   }
-  * { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: 1.0625rem/1.6 var(--sans);
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 400 1.0625rem/1.6 var(--display);
+    -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--accent); }
-  h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0 0 0.5em; }
-  main { max-width: var(--max); margin: 0 auto; padding: 0 1rem; }
-  .site-header, .site-footer {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 1.25rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+  img { max-width: 100%; }
+  a { color: var(--accent); text-underline-offset: 0.2em; }
+  :focus-visible { outline: 3px solid var(--blaze); outline-offset: 3px; border-radius: 4px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.5em; }
+  h1 { font-size: clamp(2.3rem, 6vw, 4rem); letter-spacing: -0.035em; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.25rem); }
+  h3 { font-size: 1.25rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 1em; }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.25rem; }
+  main { max-width: var(--max); margin: 0 auto; padding: 0 1.25rem; }
+  .skip { position: absolute; left: -999px; }
+  .skip:focus { left: 1rem; top: 1rem; background: var(--paper); padding: 0.5rem 1rem; z-index: 10; }
+
+  /* A small label in pine, sentence case: used only where it tells you what kind of thing follows */
+  .kicker { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
+  .reading { font-family: var(--reading); }
+  .lede { font-family: var(--reading); font-size: clamp(1.15rem, 2.2vw, 1.35rem); line-height: 1.55; color: var(--muted); max-width: var(--measure); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.3rem; border-radius: 6px;
+    font-weight: 600; text-decoration: none; border: 1.5px solid var(--text); color: var(--text); line-height: 1.2;
   }
-  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
-  .site-header nav { display: flex; gap: 1.25rem; align-items: center; }
-  .site-header nav a { color: var(--text); text-decoration: none; font-weight: 500; }
-  .site-header nav { margin-left: auto; }
-  .site-header .cta {
-    background: var(--accent); color: var(--bg); padding: 0.45rem 0.9rem; border-radius: 999px;
-    text-decoration: none; font-weight: 500;
+  .btn:hover { background: var(--surface); }
+  .btn-primary { background: var(--pine); border-color: var(--pine); color: var(--paper); }
+  .btn-primary:hover { background: color-mix(in srgb, var(--pine) 85%, var(--ink)); }
+  .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.95rem; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--line); background: var(--bg); }
+  .header-inner { display: flex; align-items: center; gap: 1.5rem; padding-top: 1rem; padding-bottom: 1rem; flex-wrap: wrap; }
+  .brand { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+  .brand svg { color: var(--pine); }
+  .site-header nav { display: flex; gap: 1.5rem; margin-left: auto; }
+  .site-header nav a { color: var(--text); text-decoration: none; font-weight: 500; padding: 0.25rem 0; border-bottom: 2px solid transparent; }
+  .site-header nav a:hover, .site-header nav a[aria-current='page'] { border-bottom-color: var(--blaze); }
+  @media (max-width: 44rem) {
+    .header-inner { gap: 0.75rem 1rem; }
+    .site-header .btn { margin-left: auto; }
+    .site-header nav { order: 3; width: 100%; margin-left: 0; gap: 1.25rem; }
   }
-  @media (max-width: 40rem) {
-    .site-header nav { order: 3; width: 100%; margin-left: 0; gap: 1.1rem; font-size: 0.95rem; }
-    .site-header .cta { margin-left: auto; }
-  }
-  /* Long-form reading (case studies, approach, services) */
-  .prose { font-size: 1.0625rem; }
+
+  /* Footer */
+  .site-footer { border-top: 1px solid var(--line); margin-top: 5rem; background: var(--surface); }
+  .footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; padding-top: 2.5rem; padding-bottom: 2.5rem; color: var(--muted); font-size: 0.95rem; }
+  .brand-foot { color: var(--text); font-weight: 700; margin: 0; }
+  .brand-foot span { color: var(--muted); font-weight: 400; }
+  .footer-inner ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: flex-end; }
+  .footer-inner a { color: var(--text); text-decoration: none; }
+  .footer-inner a:hover { color: var(--accent); }
+  .copy { grid-column: 1 / -1; margin: 0; font-size: 0.85rem; }
+  @media (max-width: 44rem) { .footer-inner { grid-template-columns: 1fr; } .footer-inner ul { justify-content: flex-start; } }
+
+  /* Long-form reading */
+  .prose { font-family: var(--reading); font-size: 1.15rem; line-height: 1.7; max-width: var(--measure); }
   .prose p, .prose li { color: var(--text); }
-  .prose h2 { font-size: 1.5rem; margin-top: 2.25rem; }
-  .prose h3 { font-size: 1.2rem; margin-top: 1.75rem; }
-  .prose img { max-width: 100%; height: auto; border-radius: 0.75rem; border: 1px solid var(--line); display: block; }
+  .prose h2 { font-family: var(--display); font-size: 1.5rem; margin-top: 2.5rem; }
+  .prose h3 { font-family: var(--display); font-size: 1.2rem; margin-top: 1.75rem; }
+  .prose strong { font-weight: 600; }
+  .prose img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line); display: block; }
   .prose figure { margin: 2rem 0; }
-  .prose figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 0.5rem; }
-  .prose .video { position: relative; aspect-ratio: 16 / 9; margin: 2rem 0; border-radius: 0.75rem; overflow: hidden; background: var(--line); }
+  .prose figcaption { color: var(--muted); font-family: var(--display); font-size: 0.85rem; margin-top: 0.5rem; }
+  .prose .video { position: relative; aspect-ratio: 16 / 9; margin: 2rem 0; border-radius: 6px; overflow: hidden; background: var(--line); }
   .prose .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .prose .tags { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+  .prose .tags { font-family: var(--display); color: var(--accent); font-weight: 600; font-size: 0.95rem; }
   .prose table { width: 100%; border-collapse: collapse; font-size: 0.95rem; display: block; overflow-x: auto; }
   .prose td, .prose th { border-bottom: 1px solid var(--line); padding: 0.5rem; text-align: left; }
-  .btn-inline { display: inline-block; background: var(--text); color: var(--bg); padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
-  .site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 4rem; }
-  .site-footer p { margin: 0; }
+  .btn-inline { display: inline-block; background: var(--pine); color: var(--paper); padding: 0.8rem 1.3rem; border-radius: 6px; text-decoration: none; font-family: var(--display); font-weight: 600; margin-top: 1rem; }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>

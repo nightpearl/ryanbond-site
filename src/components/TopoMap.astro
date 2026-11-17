@@ -1,0 +1,105 @@
+---
+/**
+ * A topographic "trail map": contour lines generated from a seed, with an
+ * optional blazed route through labeled waypoints. Purely decorative SVG,
+ * computed at build time (no client JS).
+ */
+interface Waypoint { x: number; y: number; label?: string; sub?: string; }
+interface Props {
+  seed?: number;
+  width?: number;
+  height?: number;
+  waypoints?: Waypoint[];
+  peaks?: { x: number; y: number; r: number }[];
+  rings?: number;
+  title?: string;
+  class?: string;
+}
+const {
+  seed = 7, width = 600, height = 480, waypoints = [], rings = 9,
+  peaks = [{ x: 0.72, y: 0.3, r: 0.42 }, { x: 0.22, y: 0.78, r: 0.3 }],
+  title, class: cls,
+} = Astro.props;
+
+// Deterministic pseudo-random
+let s = seed;
+const rand = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+
+const contour = (cx: number, cy: number, r: number, k: number) => {
+  const a = rand() * 0.18 + 0.06, b = rand() * 0.1 + 0.03, p1 = rand() * 6.28, p2 = rand() * 6.28;
+  const pts: [number, number][] = [];
+  const n = 72;
+  for (let i = 0; i < n; i++) {
+    const t = (i / n) * Math.PI * 2;
+    const rr = r * (1 + a * Math.sin(3 * t + p1 + k * 0.15) + b * Math.sin(5 * t + p2));
+    pts.push([cx + Math.cos(t) * rr, cy + Math.sin(t) * rr * 0.82]);
+  }
+  // Smooth closed path via Catmull-Rom to Bezier
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1p = pts[i], p2p = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1 = [p1p[0] + (p2p[0] - p0[0]) / 6, p1p[1] + (p2p[1] - p0[1]) / 6];
+    const c2 = [p2p[0] - (p3[0] - p1p[0]) / 6, p2p[1] - (p3[1] - p1p[1]) / 6];
+    d += ` C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2p[0].toFixed(1)},${p2p[1].toFixed(1)}`;
+  }
+  return d + 'Z';
+};
+
+const lines: { d: string; index: boolean }[] = [];
+for (const pk of peaks) {
+  const maxR = pk.r * Math.min(width, height) * 1.6;
+  for (let k = 0; k < rings; k++) {
+    const r = maxR * (1 - k / rings) + 6;
+    lines.push({ d: contour(pk.x * width, pk.y * height, r, k), index: k % 4 === 0 });
+  }
+}
+
+// Route through waypoints (smooth curve)
+const wp = waypoints.map((w) => ({ ...w, px: w.x * width, py: w.y * height }));
+let route = '';
+if (wp.length > 1) {
+  route = `M${wp[0].px},${wp[0].py}`;
+  for (let i = 1; i < wp.length; i++) {
+    const a = wp[i - 1], b = wp[i];
+    const mx = (a.px + b.px) / 2;
+    route += ` C${mx},${a.py} ${mx},${b.py} ${b.px},${b.py}`;
+  }
+}
+---
+<svg class:list={['topo', cls]} viewBox={`0 0 ${width} ${height}`} role={title ? 'img' : 'presentation'} aria-label={title} aria-hidden={title ? undefined : 'true'} preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="var(--contour)">
+    {lines.map((l) => <path d={l.d} stroke-width={l.index ? 1.6 : 1} />)}
+  </g>
+  {route && (
+    <g>
+      <path d={route} fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round" />
+      <path d={route} fill="none" stroke="var(--pine)" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" />
+    </g>
+  )}
+  {wp.map((w, i) => {
+    const last = i === wp.length - 1;
+    const right = w.px < width * 0.62;
+    const lx = right ? w.px + 18 : w.px - 22;
+    const ly = i === 0 || last ? w.py + 28 : w.py - 2;
+    return (
+      <g>
+        {last
+          ? <g transform={`translate(${w.px},${w.py})`}><rect x="-8" y="-8" width="16" height="16" rx="2" fill="var(--blaze)" transform="rotate(45)" /><circle r="3" fill="var(--ink)" /></g>
+          : <g><circle cx={w.px} cy={w.py} r="9" fill="var(--paper)" stroke="var(--pine)" stroke-width="2.5" /><circle cx={w.px} cy={w.py} r="3.5" fill="var(--blaze)" /></g>}
+        {w.label && (
+          <text x={lx} y={ly} text-anchor={right ? 'start' : 'end'} class="wp-label">
+            <tspan class="wp-year">{w.label}</tspan>
+            {w.sub && <tspan x={lx} dy="19" class="wp-sub">{w.sub}</tspan>}
+          </text>
+        )}
+      </g>
+    );
+  })}
+</svg>
+
+<style>
+  .topo { display: block; width: 100%; height: 100%; }
+  .wp-label { font-family: var(--display); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+  .wp-year { font-size: 20px; font-weight: 700; fill: var(--ink); }
+  .wp-sub { font-size: 17px; fill: var(--slate); }
+</style>

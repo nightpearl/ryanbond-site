@@ -1,149 +1,179 @@
 ---
 import Base from '../layouts/Base.astro';
-import StoryCard from '../components/StoryCard.astro';
+import TopoMap from '../components/TopoMap.astro';
+import LoopDiagram from '../components/LoopDiagram.astro';
+import StoryRow from '../components/StoryRow.astro';
 import { getCollection } from 'astro:content';
 
 const stories = (await getCollection('stories')).sort((a, b) => a.data.order - b.data.order);
 
-// Ryan's three working principles (from his resume).
-const method = [
-  { n: '01', title: 'Start with the user', body: 'Understand the problem, prototype early, and validate before committing. With today’s AI tools, “early” means days, not months.' },
-  { n: '02', title: 'Connect strategy to execution', body: 'Turn business goals into clear priorities, roadmaps and releases, and keep iterating once real customers respond.' },
-  { n: '03', title: 'Bring people with me', body: 'Align leaders, designers and engineers around outcomes, not just output.' },
+const route = [
+  { x: 0.1, y: 0.86, label: '1999', sub: 'Razorfish' },
+  { x: 0.32, y: 0.64, label: '2014', sub: 'Britannica' },
+  { x: 0.24, y: 0.4, label: '2019', sub: 'Epsilon, Rally Health' },
+  { x: 0.56, y: 0.3, label: '2021', sub: 'SteelSeries' },
+  { x: 0.82, y: 0.12, label: 'Now', sub: 'Fractional product' },
 ];
-const proof = [
+
+// Ryan's three working principles (from his resume). Not a sequence, so no numbers.
+const principles = [
+  { icon: 'user', title: 'Start with the user', body: 'Understand the problem, prototype early, and validate before committing.' },
+  { icon: 'route', title: 'Connect strategy to execution', body: 'Turn business goals into clear priorities, roadmaps and releases.' },
+  { icon: 'people', title: 'Bring people with me', body: 'Align leaders, designers and engineers around outcomes, not just output.' },
+];
+const numbers = [
   { stat: '2×', label: 'Britannica Kids subscription revenue in year one' },
-  { stat: '$165M+', label: 'Retention product portfolio at Epsilon-Conversant' },
-  { stat: '150+', label: 'Games and digital experiences produced' },
-  { stat: '25+', label: 'Years across health, ed-tech, gaming, advertising and nonprofits' },
+  { stat: '$165M+', label: 'retention product portfolio at Epsilon-Conversant' },
+  { stat: '150+', label: 'games and digital experiences produced' },
+  { stat: '25', label: 'years leading product, programs and production' },
 ];
 const brands = ['Encyclopaedia Britannica', 'SteelSeries', 'UnitedHealthcare', 'Scouting America', 'Kraft', 'Kellogg’s', 'Microsoft', 'Dell', 'AT&T', 'State Farm', 'MillerCoors', 'McDonald’s'];
 const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/2024/11/ryan-bond-small-headshot-2024.jpg?w=600';
 ---
 <Base>
   <section class="hero">
-    <p class="eyebrow">Product leadership · Customer-driven strategy</p>
-    <h1>Customer insight, brought to market at the speed of now.</h1>
-    <p class="lede">
-      AI has changed how fast an idea can be tested, iterated and shipped. It hasn’t changed
-      what makes a product worth shipping: knowing which customer problem is worth solving.
-      For 25 years I’ve led the products, teams and stories that start there.
-    </p>
-    <div class="actions">
-      <a class="btn primary" href="/work/">See the work →</a>
-      <a class="btn" href="/about/">About me</a>
+    <div class="hero-text">
+      <p class="kicker">Ryan Bond, product leader and producer</p>
+      <h1>Customer insight, brought to market at the speed of now.</h1>
+      <p class="lede">
+        AI has changed how fast an idea can be tested, iterated and shipped. It hasn’t changed
+        what makes a product worth shipping: knowing which customer problem is worth solving.
+        For 25 years I’ve led the products, teams and stories that start there.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/work/">See the work</a>
+        <a class="btn" href="/about/">About me</a>
+      </div>
+    </div>
+    <div class="hero-map">
+      <TopoMap seed={11} waypoints={route} title="A trail map of Ryan Bond's career, from Razorfish in 1999 to fractional product leadership today" />
     </div>
   </section>
 
-  <section class="brands" aria-label="Brands I've built for">
-    <p class="label">Brands I’ve built for</p>
+  <section class="brands" aria-labelledby="brands-h">
+    <h2 id="brands-h" class="brands-h">Brands and organizations I’ve built for</h2>
     <ul>{brands.map((b) => <li>{b}</li>)}</ul>
   </section>
 
-  <section class="method">
-    <h2>How I work</h2>
-    <div class="steps">
-      {method.map((m) => (
-        <div class="step">
-          <span class="n">{m.n}</span>
-          <h3>{m.title}</h3>
-          <p>{m.body}</p>
+  <section class="band loop-band">
+    <div class="loop-intro">
+      <h2>The loop got faster. The job didn’t change.</h2>
+      <p class="lede">
+        Every product I’ve worked on runs the same loop. Today’s AI tools shorten every lap,
+        from interview notes to a clickable prototype in days. What still decides the outcome is
+        the judgment at each step: which problem, which customer, and what not to build.
+      </p>
+    </div>
+    <LoopDiagram />
+  </section>
+
+  <section class="principles" aria-labelledby="how-h">
+    <h2 id="how-h">How I work</h2>
+    <div class="cols">
+      {principles.map((p) => (
+        <div class="principle">
+          <svg viewBox="0 0 32 32" width="36" height="36" aria-hidden="true" fill="none" stroke="var(--pine)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            {p.icon === 'user' && <><circle cx="16" cy="11" r="5" /><path d="M6 27c1.5-5.5 5.5-8 10-8s8.5 2.5 10 8" /><circle cx="25" cy="7" r="2" fill="var(--blaze)" stroke="none" /></>}
+            {p.icon === 'route' && <><circle cx="7" cy="25" r="3" /><path d="M10 25h6a5 5 0 0 0 0-10h-2a5 5 0 0 1 0-10h8" stroke-dasharray="3 3" /><path d="M24 2l4 3-4 3" /><circle cx="26" cy="5" r="0.5" fill="var(--blaze)" /></>}
+            {p.icon === 'people' && <><circle cx="11" cy="11" r="4" /><circle cx="22" cy="12" r="3.5" /><path d="M3 26c1-4.5 4-7 8-7s7 2.5 8 7" /><path d="M18 20.5c1.2-.9 2.6-1.4 4-1.4 3.4 0 6 2.2 7 6.4" /></>}
+          </svg>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
         </div>
       ))}
     </div>
   </section>
 
-  <section class="proof">
-    {proof.map((p) => (
-      <div class="card">
-        <span class="stat">{p.stat}</span>
-        <span class="label">{p.label}</span>
-      </div>
+  <section class="numbers" aria-label="Selected results">
+    {numbers.map((n) => (
+      <div><strong>{n.stat}</strong><span>{n.label}</span></div>
     ))}
   </section>
 
-  <section class="stories">
+  <section class="stories" aria-labelledby="stories-h">
     <div class="section-head">
-      <h2>Stories from the work</h2>
-      <a href="/work/">Full archive →</a>
+      <h2 id="stories-h">Stories from the work</h2>
+      <a href="/work/">The full archive</a>
     </div>
-    <div class="grid">
-      {stories.map((s) => (
-        <StoryCard slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
-          summary={s.data.summary} cover={s.data.cover} />
-      ))}
-    </div>
+    {stories.map((s, i) => (
+      <StoryRow slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
+        summary={s.data.summary} cover={s.data.cover} highlight={s.data.highlights[0]} seed={i * 7 + 3} />
+    ))}
   </section>
 
   <section class="behind">
     <img src={headshot} alt="Ryan Bond" loading="lazy" />
     <div>
       <h2>Who’s behind it</h2>
-      <p>
-        I’m Ryan Bond: product leader, producer and Evanston local. I’ve shipped kids’ games
+      <p class="lede">
+        I’m Ryan Bond, a product leader and producer in Evanston, Illinois. I’ve shipped kids’ games
         and health apps, led Fortune 500 campaigns, and run product for brands people trust.
-        Off the clock I’m an Eagle Scout and longtime Scout leader, an outdoorsman, and on
-        stage or backstage in Chicago-area theatre.
+        Off the clock I’m an Eagle Scout and longtime Scout leader, an outdoorsman, and on stage
+        or backstage in Chicago-area theatre.
       </p>
-      <a href="/about/">More about me →</a>
+      <a class="btn" href="/about/">More about me</a>
     </div>
   </section>
 
-  <section class="cta">
-    <h2>Got a product question worth getting right?</h2>
-    <p>Whether it’s a role, a project or just a conversation, I’d like to hear it.</p>
-    <div class="actions">
-      <a class="btn primary" href="mailto:ryanbond@fastmail.net">Email me →</a>
-      <a class="btn" href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>
+  <section class="closing">
+    <div class="closing-map"><TopoMap seed={29} width={900} height={320} rings={7} peaks={[{ x: 0.85, y: 0.5, r: 0.5 }, { x: 0.1, y: 0.2, r: 0.3 }]} /></div>
+    <div class="closing-text">
+      <h2>Got a product question worth getting right?</h2>
+      <p class="lede">A role, a project, or a conversation about where product work is heading. I’d like to hear it.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="mailto:ryanbond@fastmail.net">Email ryanbond@fastmail.net</a>
+        <a class="btn" href="https://www.linkedin.com/in/ryanmbond/">Connect on LinkedIn</a>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  section { padding: 3rem 0; }
-  .hero { padding: 4rem 0 2.5rem; max-width: 48rem; }
-  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 1rem; }
-  h1 { font-size: clamp(2.2rem, 6.5vw, 3.8rem); }
-  h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); }
-  .lede { font-size: 1.2rem; color: var(--muted); margin: 0 0 2rem; }
+  section { padding: 4rem 0; }
   .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .btn { display: inline-block; padding: 0.75rem 1.25rem; border-radius: 999px; border: 1px solid var(--line); color: var(--text); text-decoration: none; font-weight: 600; }
-  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-  .brands { padding: 1.5rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .brands .label { margin: 0 0 0.75rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; color: var(--muted); }
-  .brands ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
-  .brands li { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; color: var(--text); opacity: 0.8; }
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center; padding: 3.5rem 0 3rem; }
+  .hero h1 { max-width: 12ch; }
+  .hero .lede { margin-bottom: 2rem; }
+  .hero-map { aspect-ratio: 5 / 4; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+  @media (max-width: 56rem) { .hero { grid-template-columns: 1fr; } .hero h1 { max-width: 16ch; } }
 
-  .steps { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-top: 1.5rem; }
-  .step { border-top: 3px solid var(--accent); padding-top: 1rem; }
-  .step .n { font-weight: 700; color: var(--accent); font-size: 0.85rem; }
-  .step h3 { font-size: 1.3rem; margin: 0.35rem 0 0.4rem; }
-  .step p { margin: 0; color: var(--muted); }
+  .brands { padding: 1.75rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .brands-h { font-size: 0.95rem; font-weight: 600; color: var(--muted); letter-spacing: 0; margin: 0 0 0.75rem; }
+  .brands ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.75rem; }
+  .brands li { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; color: var(--text); opacity: 0.75; }
 
-  .proof { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); padding-top: 0; }
-  @media (max-width: 40rem) {
-    .proof { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .card { padding: 1rem; }
-    .stat { font-size: 1.75rem; }
-    .label { font-size: 0.85rem; }
+  .band { background: var(--surface); margin: 4rem -1.25rem 0; padding: 4rem 1.25rem; border-radius: 8px; }
+  .loop-band { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+  @media (min-width: 64rem) { .loop-band { grid-template-columns: 0.9fr 1.1fr; align-items: center; padding: 4rem 3rem; } }
+  .loop-intro h2 { max-width: 20ch; }
+
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 1.5rem; }
+  .principle h3 { margin: 0.75rem 0 0.4rem; }
+  .principle p { color: var(--muted); font-family: var(--reading); font-size: 1.1rem; margin: 0; }
+  @media (max-width: 44rem) { .cols { grid-template-columns: 1fr; gap: 1.75rem; } }
+
+  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); padding: 0; border-top: 2px solid var(--text); }
+  .numbers div { padding: 1.25rem 1.25rem 1.25rem 0; display: flex; flex-direction: column; gap: 0.25rem; }
+  .numbers div + div { border-left: 1px solid var(--line); padding-left: 1.25rem; }
+  .numbers strong { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .numbers span { color: var(--muted); font-size: 0.95rem; }
+  @media (max-width: 44rem) {
+    .numbers { grid-template-columns: 1fr 1fr; }
+    .numbers div:nth-child(3) { border-left: 0; padding-left: 0; }
+    .numbers div:nth-child(n+3) { border-top: 1px solid var(--line); }
   }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.35rem; }
-  .stat { font-family: var(--serif); font-size: 2.25rem; font-weight: 700; }
-  .label { color: var(--muted); font-size: 0.95rem; }
 
-  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
-  .section-head h2 { margin: 0; }
-  .section-head a { font-weight: 600; text-decoration: none; }
-  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .section-head a { font-weight: 600; }
 
-  .behind { display: grid; grid-template-columns: 12rem 1fr; gap: 2rem; align-items: center; border-top: 1px solid var(--line); }
-  .behind img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 1px solid var(--line); background: var(--line); }
-  .behind p { color: var(--muted); font-size: 1.05rem; }
-  .behind a { font-weight: 600; text-decoration: none; }
-  @media (max-width: 40rem) { .behind { grid-template-columns: 1fr; } .behind img { max-width: 14rem; } }
+  .behind { display: grid; grid-template-columns: 14rem 1fr; gap: 2.5rem; align-items: center; border-top: 1px solid var(--line); }
+  .behind img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; background: var(--surface); }
+  .behind .lede { margin-bottom: 1.5rem; }
+  @media (max-width: 44rem) { .behind { grid-template-columns: 1fr; } .behind img { max-width: 13rem; } }
 
-  .cta { background: var(--surface); border: 1px solid var(--line); border-radius: 1.25rem; padding: 2.5rem 1.5rem; text-align: center; margin: 1rem 0 0; }
-  .cta p { color: var(--muted); }
-  .cta .actions { justify-content: center; }
+  .closing { position: relative; border-radius: 8px; overflow: hidden; background: var(--surface); padding: 0; margin-top: 1rem; }
+  .closing-map { position: absolute; inset: 0; opacity: 0.9; }
+  .closing-text { position: relative; padding: 3.5rem 2rem; max-width: 40rem; }
+  .closing-text .lede { margin-bottom: 1.5rem; }
 </style>

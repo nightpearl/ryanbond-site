@@ -5,14 +5,13 @@ const { title, eyebrow, heading, description } = Astro.props;
 ---
 <Base title={title} description={description}>
   <article class="page">
-    <p class="eyebrow">{eyebrow}</p>
+    <p class="kicker">{eyebrow}</p>
     <h1>{heading}</h1>
     <div class="prose"><slot /></div>
   </article>
 </Base>
 
 <style>
-  .page { max-width: 44rem; padding: 3rem 0 1rem; }
-  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
-  h1 { font-size: clamp(2rem, 5vw, 3rem); }
+  .page { padding: 3.5rem 0 1rem; }
+  h1 { max-width: 16ch; }
 </style>
