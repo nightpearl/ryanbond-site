@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { getCollection } from 'astro:content';
+
+const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const groups = [
+  { key: 'product', title: 'Product leadership', blurb: 'Owning vision, roadmap and delivery for consumer products.' },
+  { key: 'agency', title: 'Agency, games & campaigns', blurb: 'Producing games, sites and campaigns for major brands at Razorfish.' },
+  { key: 'community', title: 'Community & creative', blurb: 'Venues, podcasts and games built with Chicago’s creative community.' },
+];
+---
+<Base title="Work | Ryan Bond" description="Selected product, game and campaign work by Ryan Bond.">
+  <header class="page-head">
+    <p class="eyebrow">Work</p>
+    <h1>Selected work</h1>
+    <p class="lede">Products, games and experiences I’ve led or produced across 25+ years.</p>
+  </header>
+
+  {groups.map((g) => (
+    <section class="group">
+      <h2>{g.title}</h2>
+      <p class="blurb">{g.blurb}</p>
+      <div class="grid">
+        {all.filter((p) => p.data.group === g.key).map((p) => (
+          <WorkCard slug={p.id} title={p.data.title} years={p.data.years} cover={p.data.cover}
+            role={p.data.role} comingSoon={p.data.comingSoon} />
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .page-head { padding: 3rem 0 1rem; max-width: 44rem; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); }
+  .lede { color: var(--muted); font-size: 1.15rem; }
+  .group { padding: 2rem 0; border-top: 1px solid var(--line); }
+  .group h2 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+  .blurb { color: var(--muted); margin: 0 0 1.5rem; }
+  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+</style>

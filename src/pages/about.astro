@@ -1,0 +1,42 @@
+---
+import Page from '../layouts/Page.astro';
+// Career timeline from Ryan's current resume ("Career at a glance").
+const career = [
+  ['2026–now', 'Six Feet Up', 'Service Delivery Lead', 'Software & AI solutions'],
+  ['2024–now', 'Independent', 'Fractional Product Leader & Producer', 'Product strategy, delivery & producing'],
+  ['2021–24', 'SteelSeries', 'Lead Product Manager', 'Gaming software'],
+  ['2021', 'Rally Health / UnitedHealthcare', 'Senior Product Manager', 'Employee assistance web & mobile'],
+  ['2019–21', 'Epsilon-Conversant', 'Senior Product Manager', 'Customer retention & monetization'],
+  ['2014–19', 'Encyclopaedia Britannica', 'Product Director', 'Consumer digital products & content'],
+  ['1999–2014', 'Razorfish', 'Program Manager & Producer', 'Digital experiences & enterprise programs'],
+];
+---
+<Page title="About | Ryan Bond" eyebrow="About" heading="Career at a glance"
+  description="Ryan Bond's career across product, delivery and producing.">
+  <ol class="timeline">
+    {career.map(([when, org, role, focus]) => (
+      <li>
+        <span class="when">{when}</span>
+        <div>
+          <strong>{org}</strong>
+          <span class="role">{role}</span>
+          <span class="focus">{focus}</span>
+        </div>
+      </li>
+    ))}
+  </ol>
+  <p>
+    Full resume available on request, or see
+    <a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>.
+  </p>
+</Page>
+
+<style>
+  .timeline { list-style: none; padding: 0; margin: 0 0 2rem; }
+  .timeline li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .when { color: var(--accent); font-weight: 600; font-size: 0.9rem; padding-top: 0.15rem; }
+  .timeline div { display: flex; flex-direction: column; }
+  .role { color: var(--text); }
+  .focus { color: var(--muted); font-size: 0.9rem; }
+  @media (max-width: 30rem) { .timeline li { grid-template-columns: 1fr; gap: 0.25rem; } }
+</style>

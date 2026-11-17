@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return all.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: all[(i + 1) % all.length] },
+  }));
+}
+const { entry, next } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const facts = [
+  ['Role', d.role], ['Client', d.client], ['Product', d.product],
+  ['Years', d.years], ['Type', d.type], ['Partners', d.agencies],
+].filter(([, v]) => v);
+---
+<Base title={`${d.title} | Ryan Bond`} description={d.summary}>
+  <article>
+    <a class="back" href="/work/">← All work</a>
+    <header>
+      <p class="eyebrow">{d.years}</p>
+      <h1>{d.title}</h1>
+    </header>
+    <img class="cover" src={d.cover} alt="" />
+    <dl class="facts">
+      {facts.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
+    </dl>
+    {d.comingSoon && (
+      <p class="coming">The full write-up for this project is coming soon.</p>
+    )}
+    <div class="prose"><Content /></div>
+    <nav class="next">
+      <span>Next project</span>
+      <a href={`/work/${next.id}/`}>{next.data.title} →</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  article { max-width: 46rem; margin: 0 auto; padding: 2rem 0; }
+  .back { display: inline-block; margin-bottom: 1.5rem; text-decoration: none; font-weight: 600; }
+  .eyebrow { color: var(--accent); font-weight: 600; margin: 0 0 0.5rem; }
+  h1 { font-size: clamp(2rem, 6vw, 3rem); }
+  .cover { width: 100%; border-radius: 1rem; border: 1px solid var(--line); margin: 1rem 0 1.5rem; display: block; }
+  .facts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem 1.5rem;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; margin: 0 0 2rem;
+  }
+  .facts dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .facts dd { margin: 0.2rem 0 0; }
+  .coming { color: var(--muted); font-style: italic; }
+  .next { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .next span { color: var(--muted); font-size: 0.85rem; }
+  .next a { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; text-decoration: none; }
+</style>

@@ -1,0 +1,41 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  years: string;
+  cover: string;
+  role?: string;
+  comingSoon?: boolean;
+}
+const { slug, title, years, cover, role, comingSoon } = Astro.props;
+---
+<a class="work-card" href={`/work/${slug}/`}>
+  <div class="thumb">
+    <img src={cover} alt="" loading="lazy" />
+    {comingSoon && <span class="badge">Details coming</span>}
+  </div>
+  <div class="meta">
+    <h3>{title}</h3>
+    <p class="years">{years}</p>
+    {role && <p class="role">{role}</p>}
+  </div>
+</a>
+
+<style>
+  .work-card {
+    display: flex; flex-direction: column; text-decoration: none; color: var(--text);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; overflow: hidden;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .work-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .thumb { position: relative; aspect-ratio: 16 / 10; background: var(--line); overflow: hidden; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .badge {
+    position: absolute; top: 0.75rem; left: 0.75rem; font-size: 0.75rem; font-weight: 600;
+    background: var(--bg); color: var(--muted); padding: 0.2rem 0.6rem; border-radius: 999px;
+  }
+  .meta { padding: 1rem 1.25rem 1.25rem; }
+  h3 { font-size: 1.2rem; margin: 0 0 0.25rem; }
+  .years { margin: 0; color: var(--accent); font-size: 0.85rem; font-weight: 600; }
+  .role { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+</style>

@@ -1,12 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-// PLACEHOLDER CONTENT: proves the pipeline works. Real copy comes in the content pass.
+import WorkCard from '../components/WorkCard.astro';
+import { getCollection } from 'astro:content';
+// Hero and stats are interim copy; the full content pass comes next.
 const proof = [
   { stat: '2×', label: 'Britannica Kids subscription revenue in year one' },
   { stat: '$165M+', label: 'Retention product portfolio at Epsilon-Conversant' },
   { stat: '150+', label: 'Games and digital experiences produced' },
   { stat: '25+', label: 'Years across health, ed-tech, gaming and consumer tech' },
 ];
+const featuredSlugs = ['britannica-kids', 'guardians-of-history', 'postopia'];
+const work = await getCollection('work');
+const featured = featuredSlugs.map((s) => work.find((w) => w.id === s)).filter(Boolean);
 ---
 <Base>
   <section class="hero">
@@ -18,11 +23,11 @@ const proof = [
     </p>
     <div class="actions">
       <a class="btn primary" href="mailto:ryanbond@fastmail.net">Start a conversation →</a>
-      <a class="btn" href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>
+      <a class="btn" href="/services/">How I can help</a>
     </div>
   </section>
 
-  <section id="work" class="proof">
+  <section class="proof">
     {proof.map((p) => (
       <div class="card">
         <span class="stat">{p.stat}</span>
@@ -31,12 +36,16 @@ const proof = [
     ))}
   </section>
 
-  <section id="about" class="about">
-    <h2>New site in progress</h2>
-    <p>
-      This page is a working placeholder while the full site is rebuilt.
-      Services, case studies and writing are on the way.
-    </p>
+  <section class="featured">
+    <div class="section-head">
+      <h2>Selected work</h2>
+      <a href="/work/">See all work →</a>
+    </div>
+    <div class="grid">
+      {featured.map((p) => p && (
+        <WorkCard slug={p.id} title={p.data.title} years={p.data.years} cover={p.data.cover} role={p.data.role} />
+      ))}
+    </div>
   </section>
 </Base>
 
@@ -59,6 +68,9 @@ const proof = [
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.35rem; }
   .stat { font-family: var(--serif); font-size: 2.25rem; font-weight: 700; }
   .label { color: var(--muted); font-size: 0.95rem; }
-  .about { border-top: 1px solid var(--line); padding-top: 2.5rem; max-width: 40rem; }
-  .about p { color: var(--muted); }
+  .featured { border-top: 1px solid var(--line); padding-top: 2.5rem; }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .section-head h2 { font-size: 1.75rem; margin: 0; }
+  .section-head a { font-weight: 600; text-decoration: none; }
+  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
 </style>

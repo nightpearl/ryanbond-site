@@ -13,8 +13,14 @@ Every push to `main` publishes the live site at https://ryanbond.co. Every other
 - `src/layouts/Base.astro`: header, footer, global styles and color tokens (light and dark mode).
 - `src/pages/`: one file per page. `index.astro` is the home page.
 - `src/components/`: reusable pieces (cards, sections).
+- `src/content/work/`: one Markdown file per project (case studies). Frontmatter drives the cards and fact box; `group` is product, agency or community; `order` sets the sort.
+- `src/copy/`: long-form copy for the Approach and Services pages.
 - `src/content/posts/`: blog posts as Markdown (not wired up yet).
 - `public/`: images, favicon, files served as-is.
+- `public/_redirects`: keeps old WordPress URLs (e.g. /britannica-kids/) working. Add a line when a page moves.
+
+## Images
+- Project images currently load from the old WordPress media host (skillpointstation.wordpress.com). Before the WordPress site is retired, download them into `public/images/` and update the paths.
 
 ## Voice and content
 - Copy should sound like Ryan: human-centered, purpose-first, practical, warm but direct.

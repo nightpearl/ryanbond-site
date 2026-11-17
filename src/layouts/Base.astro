@@ -30,10 +30,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <header class="site-header">
       <a class="brand" href="/">Ryan Bond</a>
       <nav>
-        <a href="/#work">Work</a>
-        <a href="/#about">About</a>
-        <a class="cta" href="mailto:ryanbond@fastmail.net">Contact</a>
+        <a href="/work/">Work</a>
+        <a href="/services/">Services</a>
+        <a href="/approach/">Approach</a>
+        <a href="/about/">About</a>
       </nav>
+      <a class="cta" href="mailto:ryanbond@fastmail.net">Contact</a>
     </header>
     <main>
       <slot />
@@ -94,9 +96,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   .brand { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
   .site-header nav { display: flex; gap: 1.25rem; align-items: center; }
   .site-header nav a { color: var(--text); text-decoration: none; font-weight: 500; }
-  .site-header nav a.cta {
+  .site-header nav { margin-left: auto; }
+  .site-header .cta {
     background: var(--accent); color: var(--bg); padding: 0.45rem 0.9rem; border-radius: 999px;
+    text-decoration: none; font-weight: 500;
   }
+  @media (max-width: 40rem) {
+    .site-header nav { order: 3; width: 100%; margin-left: 0; gap: 1.1rem; font-size: 0.95rem; }
+    .site-header .cta { margin-left: auto; }
+  }
+  /* Long-form reading (case studies, approach, services) */
+  .prose { font-size: 1.0625rem; }
+  .prose p, .prose li { color: var(--text); }
+  .prose h2 { font-size: 1.5rem; margin-top: 2.25rem; }
+  .prose h3 { font-size: 1.2rem; margin-top: 1.75rem; }
+  .prose img { max-width: 100%; height: auto; border-radius: 0.75rem; border: 1px solid var(--line); display: block; }
+  .prose figure { margin: 2rem 0; }
+  .prose figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 0.5rem; }
+  .prose .video { position: relative; aspect-ratio: 16 / 9; margin: 2rem 0; border-radius: 0.75rem; overflow: hidden; background: var(--line); }
+  .prose .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .prose .tags { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 0.95rem; display: block; overflow-x: auto; }
+  .prose td, .prose th { border-bottom: 1px solid var(--line); padding: 0.5rem; text-align: left; }
+  .btn-inline { display: inline-block; background: var(--text); color: var(--bg); padding: 0.75rem 1.25rem; border-radius: 999px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
   .site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 4rem; }
   .site-footer p { margin: 0; }
 </style>
