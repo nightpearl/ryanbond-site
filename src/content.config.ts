@@ -19,4 +19,20 @@ const work = defineCollection({
   }),
 });
 
-export const collections = { work };
+// Featured stories: the 4–6 deep case studies the site leads with.
+const stories = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/stories' }),
+  schema: z.object({
+    title: z.string(),
+    kicker: z.string(),
+    years: z.string(),
+    roles: z.array(z.string()),
+    summary: z.string(),
+    cover: z.string().optional(),
+    order: z.number(),
+    highlights: z.array(z.string()),
+    related: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { work, stories };

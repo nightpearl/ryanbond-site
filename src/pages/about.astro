@@ -1,42 +1,93 @@
 ---
-import Page from '../layouts/Page.astro';
-// Career timeline from Ryan's current resume ("Career at a glance").
+import Base from '../layouts/Base.astro';
+// Career timeline from Ryan's resume. Six Feet Up ended in 2026 (no longer current).
 const career = [
-  ['2026–now', 'Six Feet Up', 'Service Delivery Lead', 'Software & AI solutions'],
   ['2024–now', 'Independent', 'Fractional Product Leader & Producer', 'Product strategy, delivery & producing'],
-  ['2021–24', 'SteelSeries', 'Lead Product Manager', 'Gaming software'],
+  ['2026', 'Six Feet Up', 'Service Delivery Lead', 'Software & AI consultancy'],
+  ['2021–24', 'SteelSeries', 'Lead Product Manager, Software', 'Gaming software'],
   ['2021', 'Rally Health / UnitedHealthcare', 'Senior Product Manager', 'Employee assistance web & mobile'],
   ['2019–21', 'Epsilon-Conversant', 'Senior Product Manager', 'Customer retention & monetization'],
   ['2014–19', 'Encyclopaedia Britannica', 'Product Director', 'Consumer digital products & content'],
-  ['1999–2014', 'Razorfish', 'Program Manager & Producer', 'Digital experiences & enterprise programs'],
+  ['1999–2014', 'Razorfish', 'Program Manager & Producer', 'Digital experiences, games & enterprise programs'],
 ];
+const community = [
+  'Eagle Scout, Wood Badge, and 15+ years as a Scout leader',
+  'Board of Directors, Otherworld Theatre and WildClaw Theatre; advisory committee, Skokie Devonshire Playhouse',
+  'SXSW 2019 speaker',
+  'Industry sponsor, Northwestern University and Columbia College Chicago',
+  'BFA, Digital Arts, University of Arizona',
+];
+const headshot = 'https://skillpointstation.wordpress.com/wp-content/uploads/2024/11/ryan-bond-small-headshot-2024.jpg?w=800';
 ---
-<Page title="About | Ryan Bond" eyebrow="About" heading="Career at a glance"
-  description="Ryan Bond's career across product, delivery and producing.">
-  <ol class="timeline">
-    {career.map(([when, org, role, focus]) => (
-      <li>
-        <span class="when">{when}</span>
-        <div>
-          <strong>{org}</strong>
-          <span class="role">{role}</span>
-          <span class="focus">{focus}</span>
-        </div>
-      </li>
-    ))}
-  </ol>
-  <p>
-    Full resume available on request, or see
-    <a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>.
-  </p>
-</Page>
+<Base title="About | Ryan Bond" description="Ryan Bond: product leader, producer, Scout leader and theatre maker, based in Evanston, IL.">
+  <section class="intro">
+    <div>
+      <p class="eyebrow">About</p>
+      <h1>I turn ambiguity into things people use.</h1>
+      <p class="lede">
+        I’m a product leader and producer based in Evanston, Illinois. Over 25 years I’ve
+        led product at Encyclopaedia Britannica and SteelSeries, run Fortune 500 programs at
+        Razorfish, produced more than 150 games, and helped health and AI startups find their footing.
+      </p>
+      <p>
+        The thread through all of it is the same: start with the people you’re serving,
+        test early, and keep teams pointed at outcomes. AI tools now let me go from customer
+        insight to a working prototype in days. The judgment about what’s worth building
+        still comes from experience.
+      </p>
+    </div>
+    <img src={headshot} alt="Ryan Bond" />
+  </section>
+
+  <section class="block">
+    <h2>How I use AI</h2>
+    <p>
+      I use Claude, ChatGPT, Gemini, Figma Make, Lovable and agentic workflows to speed up
+      discovery and prototyping: synthesizing interviews, drafting user stories, and building
+      clickable concepts to test with real users. AI does the drafting. Decisions, and the
+      accountability for them, stay with people. This site is built and maintained the same way.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2>Career at a glance</h2>
+    <ol class="timeline">
+      {career.map(([when, org, role, focus]) => (
+        <li>
+          <span class="when">{when}</span>
+          <div><strong>{org}</strong><span class="role">{role}</span><span class="focus">{focus}</span></div>
+        </li>
+      ))}
+    </ol>
+    <p class="note">Full resume on request, or see <a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>. My longer <a href="/approach/">product philosophy</a> is here too.</p>
+  </section>
+
+  <section class="block">
+    <h2>Beyond the day job</h2>
+    <ul class="community">{community.map((c) => <li>{c}</li>)}</ul>
+  </section>
+</Base>
 
 <style>
-  .timeline { list-style: none; padding: 0; margin: 0 0 2rem; }
-  .timeline li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .intro { display: grid; grid-template-columns: 1fr 16rem; gap: 2.5rem; align-items: start; padding: 3rem 0 1rem; }
+  .intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 1px solid var(--line); background: var(--line); }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); }
+  .lede { font-size: 1.2rem; }
+  .intro p { color: var(--muted); }
+  .block { border-top: 1px solid var(--line); padding: 2rem 0; max-width: 46rem; }
+  .block p { color: var(--muted); }
+  .timeline { list-style: none; padding: 0; margin: 0; }
+  .timeline li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
   .when { color: var(--accent); font-weight: 600; font-size: 0.9rem; padding-top: 0.15rem; }
   .timeline div { display: flex; flex-direction: column; }
-  .role { color: var(--text); }
   .focus { color: var(--muted); font-size: 0.9rem; }
+  .note { margin-top: 1rem; }
+  .community { padding-left: 1.2rem; color: var(--text); }
+  .community li { margin-bottom: 0.4rem; }
+  @media (max-width: 44rem) {
+    .intro { grid-template-columns: 1fr; }
+    .intro img { max-width: 14rem; grid-row: 1; }
+  }
   @media (max-width: 30rem) { .timeline li { grid-template-columns: 1fr; gap: 0.25rem; } }
 </style>

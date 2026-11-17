@@ -4,8 +4,8 @@ interface Props {
   description?: string;
 }
 const {
-  title = 'Ryan Bond | Product Leadership, Strategy to Delivery',
-  description = 'Product and delivery leader helping teams decide what to build, lead the work, and get it into customers’ hands.',
+  title = 'Ryan Bond | Product Leadership & Customer-Driven Strategy',
+  description = 'Ryan Bond: product leader and producer turning customer insight into products, fast. 25 years across ed-tech, health, gaming, advertising and nonprofits.',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -31,9 +31,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <a class="brand" href="/">Ryan Bond</a>
       <nav>
         <a href="/work/">Work</a>
-        <a href="/services/">Services</a>
-        <a href="/approach/">Approach</a>
         <a href="/about/">About</a>
+        <a href="/services/">Work with me</a>
       </nav>
       <a class="cta" href="mailto:ryanbond@fastmail.net">Contact</a>
     </header>

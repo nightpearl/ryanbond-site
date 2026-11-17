@@ -1,43 +1,65 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WorkCard from '../../components/WorkCard.astro';
+import StoryCard from '../../components/StoryCard.astro';
 import { getCollection } from 'astro:content';
 
-const all = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
-const groups = [
-  { key: 'product', title: 'Product leadership', blurb: 'Owning vision, roadmap and delivery for consumer products.' },
-  { key: 'agency', title: 'Agency, games & campaigns', blurb: 'Producing games, sites and campaigns for major brands at Razorfish.' },
-  { key: 'community', title: 'Community & creative', blurb: 'Venues, podcasts and games built with Chicago’s creative community.' },
-];
+const stories = (await getCollection('stories')).sort((a, b) => a.data.order - b.data.order);
+const archive = (await getCollection('work')).sort((a, b) => {
+  const start = (y: string) => parseInt(y, 10);
+  return start(b.data.years) - start(a.data.years) || a.data.order - b.data.order;
+});
 ---
-<Base title="Work | Ryan Bond" description="Selected product, game and campaign work by Ryan Bond.">
+<Base title="Work | Ryan Bond" description="Featured stories and a 25-year archive of product, game and campaign work by Ryan Bond.">
   <header class="page-head">
     <p class="eyebrow">Work</p>
-    <h1>Selected work</h1>
-    <p class="lede">Products, games and experiences I’ve led or produced across 25+ years.</p>
+    <h1>Twenty-five years of building things people use</h1>
+    <p class="lede">The stories behind the work, then the full archive.</p>
   </header>
 
-  {groups.map((g) => (
-    <section class="group">
-      <h2>{g.title}</h2>
-      <p class="blurb">{g.blurb}</p>
-      <div class="grid">
-        {all.filter((p) => p.data.group === g.key).map((p) => (
-          <WorkCard slug={p.id} title={p.data.title} years={p.data.years} cover={p.data.cover}
-            role={p.data.role} comingSoon={p.data.comingSoon} />
-        ))}
-      </div>
-    </section>
-  ))}
+  <section>
+    <h2 class="section-title">Featured stories</h2>
+    <div class="grid">
+      {stories.map((s) => (
+        <StoryCard slug={s.id} title={s.data.title} kicker={s.data.kicker} years={s.data.years}
+          summary={s.data.summary} cover={s.data.cover} />
+      ))}
+    </div>
+  </section>
+
+  <section class="archive">
+    <h2 class="section-title">The archive</h2>
+    <p class="blurb">Individual projects, newest first.</p>
+    <ul>
+      {archive.map((p) => (
+        <li>
+          <a href={`/work/${p.id}/`}>
+            <span class="yrs">{p.data.years}</span>
+            <span class="t">{p.data.title}</span>
+            <span class="r">{p.data.role}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 </Base>
 
 <style>
-  .page-head { padding: 3rem 0 1rem; max-width: 44rem; }
+  .page-head { padding: 3rem 0 1.5rem; max-width: 44rem; }
   .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 0.75rem; }
   h1 { font-size: clamp(2rem, 5vw, 3rem); }
   .lede { color: var(--muted); font-size: 1.15rem; }
-  .group { padding: 2rem 0; border-top: 1px solid var(--line); }
-  .group h2 { font-size: 1.6rem; margin-bottom: 0.25rem; }
-  .blurb { color: var(--muted); margin: 0 0 1.5rem; }
-  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+  .section-title { font-size: 1.6rem; margin: 1rem 0 1.25rem; }
+  .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+  .archive { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 2rem; }
+  .blurb { color: var(--muted); margin: -0.75rem 0 1rem; }
+  .archive ul { list-style: none; margin: 0; padding: 0; }
+  .archive a {
+    display: grid; grid-template-columns: 7rem 1fr; gap: 0.15rem 1rem; padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text);
+  }
+  .archive a:hover .t { color: var(--accent); }
+  .yrs { color: var(--accent); font-weight: 600; font-size: 0.9rem; grid-row: span 2; padding-top: 0.1rem; }
+  .t { font-weight: 600; }
+  .r { color: var(--muted); font-size: 0.9rem; }
+  @media (max-width: 30rem) { .archive a { grid-template-columns: 1fr; } .yrs { grid-row: auto; } }
 </style>
