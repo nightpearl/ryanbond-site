@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+// PLACEHOLDER CONTENT: proves the pipeline works. Real copy comes in the content pass.
+const proof = [
+  { stat: '2×', label: 'Britannica Kids subscription revenue in year one' },
+  { stat: '$165M+', label: 'Retention product portfolio at Epsilon-Conversant' },
+  { stat: '150+', label: 'Games and digital experiences produced' },
+  { stat: '25+', label: 'Years across health, ed-tech, gaming and consumer tech' },
+];
+---
+<Base>
+  <section class="hero">
+    <p class="eyebrow">Product leadership · Strategy to delivery</p>
+    <h1>Decide what to build. Lead the work. Get it into people’s hands.</h1>
+    <p class="lede">
+      I help teams turn ambiguous problems into shipped products, as a fractional
+      product leader, delivery lead, or producer.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="mailto:ryanbond@fastmail.net">Start a conversation →</a>
+      <a class="btn" href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a>
+    </div>
+  </section>
+
+  <section id="work" class="proof">
+    {proof.map((p) => (
+      <div class="card">
+        <span class="stat">{p.stat}</span>
+        <span class="label">{p.label}</span>
+      </div>
+    ))}
+  </section>
+
+  <section id="about" class="about">
+    <h2>New site in progress</h2>
+    <p>
+      This page is a working placeholder while the full site is rebuilt.
+      Services, case studies and writing are on the way.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: 4rem 0 3rem; max-width: 46rem; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin: 0 0 1rem; }
+  h1 { font-size: clamp(2.1rem, 6vw, 3.6rem); }
+  .lede { font-size: 1.2rem; color: var(--muted); margin: 0 0 2rem; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 0.75rem 1.25rem; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--text); text-decoration: none; font-weight: 600;
+  }
+  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .proof {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    padding: 1rem 0 3rem;
+  }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .stat { font-family: var(--serif); font-size: 2.25rem; font-weight: 700; }
+  .label { color: var(--muted); font-size: 0.95rem; }
+  .about { border-top: 1px solid var(--line); padding-top: 2.5rem; max-width: 40rem; }
+  .about p { color: var(--muted); }
+</style>

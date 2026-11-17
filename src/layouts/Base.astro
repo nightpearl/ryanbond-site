@@ -1,0 +1,102 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'Ryan Bond | Product Leadership, Strategy to Delivery',
+  description = 'Product and delivery leader helping teams decide what to build, lead the work, and get it into customers’ hands.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">Ryan Bond</a>
+      <nav>
+        <a href="/#work">Work</a>
+        <a href="/#about">About</a>
+        <a class="cta" href="mailto:ryanbond@fastmail.net">Contact</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} Ryan Bond · Evanston, IL</p>
+      <p>
+        <a href="https://www.linkedin.com/in/ryanmbond/">LinkedIn</a> ·
+        <a href="mailto:ryanbond@fastmail.net">ryanbond@fastmail.net</a>
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #faf8f4;
+    --surface: #ffffff;
+    --text: #1c1b19;
+    --muted: #5d5a54;
+    --accent: #1f5f8b;
+    --line: #e4e0d8;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --max: 68rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --surface: #1d1c1a;
+      --text: #f1eee8;
+      --muted: #a8a49c;
+      --accent: #7fb6dc;
+      --line: #2e2c29;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 1.0625rem/1.6 var(--sans);
+  }
+  a { color: var(--accent); }
+  h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0 0 0.5em; }
+  main { max-width: var(--max); margin: 0 auto; padding: 0 1rem; }
+  .site-header, .site-footer {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 1.25rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+  .site-header nav { display: flex; gap: 1.25rem; align-items: center; }
+  .site-header nav a { color: var(--text); text-decoration: none; font-weight: 500; }
+  .site-header nav a.cta {
+    background: var(--accent); color: var(--bg); padding: 0.45rem 0.9rem; border-radius: 999px;
+  }
+  .site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 4rem; }
+  .site-footer p { margin: 0; }
+</style>
